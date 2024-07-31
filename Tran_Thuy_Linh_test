@@ -36,6 +36,9 @@ CREATE TABLE company_data.Doanh_thu (
     product_group VARCHAR(50)
 );
 
+#Sử dụng database company_data;
+USE comapny_data;
+
 # Chèn dữ liệu vào bảng Dau_tu và Doanh_thu:
 LOAD DATA LOCAL INFILE 'Dau_tu.csv' INTO TABLE Dau_tu
 FIELDS TERMINATED BY ','
