@@ -1,0 +1,96 @@
+# Truy cập vào mySQL
+mysql -u student -p student
+
+# Tạo Database:
+CREATE DATABASE company_data;
+
+# Tạo bảng Dau_tu:
+CREATE TABLE company_data.Dau_tu (
+    No INT,
+    month INT,
+    year INT,
+    customer2 VARCHAR(50),
+    customer1 VARCHAR(50),
+    province VARCHAR(50),
+    activity_name VARCHAR(50),
+    quantity INT,
+    product_group VARCHAR(50),
+    product VARCHAR(50),
+    plant VARCHAR(50),
+    farmer_quantity INT,
+    investment BIGINT,
+    deploy VARCHAR(50)
+);
+
+# Tạo bảng Doanh_thu:
+CREATE TABLE company_data.Doanh_thu (
+    No INT,
+    year INT,
+    month INT,
+    customer2 VARCHAR(50),
+    customer1 VARCHAR(50),
+    province VARCHAR(50),
+    product VARCHAR(50),
+    quantity INT,
+    revenue BIGINT,
+    product_group VARCHAR(50)
+);
+
+# Chèn dữ liệu vào bảng Dau_tu và Doanh_thu:
+LOAD DATA LOCAL INFILE 'Dau_tu.csv' INTO TABLE Dau_tu
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(No, month, year, customer2, customer1, province, activity_name, quantity, product_group, product, plant, farmer_quantity, investment, deploy);
+
+LOAD DATA LOCAL INFILE 'Doanh_thu.csv' INTO TABLE Doanh_thu
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(No, year, month, customer2, customer1, province, product, quantity, revenue, product_group);
+
+# 1. Truy vấn "Tìm số tiền đầu tư vào mỗi tỉnh trong năm?"
+SELECT DISTINCT d.province, SUM(d.investment), d.year
+FROM Dau_tu AS d
+GROUP BY d.province, d.year;
+
+# 2. Truy vấn “Tỉnh nào được đầu tư nhiều nhất?”
+SELECT DISTINCT d.province, SUM(d.investment) AS iv, d.year
+FROM Dau_tu AS d 
+ORDER BY iv DESC
+LIMIT 1;
+
+# 3. Truy vấn “Tìm Doanh thu sinh ra từ mỗi tỉnh này trong năm?”
+SELECT DISTINCT dt.province, SUM(dt.revenue), dt.year
+FROM Doanh_thu AS dt
+GROUP BY dt.province, dt.year;
+
+# 4. Truy vấn:”Số tiền đầu tư vào mỗi Khách hàng cấp 1 và doanh thu được tạo ra trong năm? “
+SELECT DISTINCT d.customer1, SUM(d.investment), d.year
+FROM Dau_tu AS d
+GROUP BY d.customer1, d.year;
+
+SELECT DISTINCT dt.customer1, SUM(dt.revenue), dt.year
+FROM Doanh_thu AS dt
+GROUP BY dt.customer1, dt.year;
+
+#5. Truy vấn:”Tìm Số lượng nông dân trong hệ thống của mỗi Khách hàng cấp 2, khách hàng nào có số nông dân cao nhất?”
+SELECT DISTINCT d.customer2, d.farmer_quantity, d.year
+FROM Dau_tu AS d
+GROUP BY d.customer2, d.year;
+
+SELECT DISTINCT d.customer2, d.farmer_quantity
+FROM Dau_tu as d
+ORDER BY d.farmer_quantity DESC
+LIMIT 1;
+
+#6.  Truy vấn “Có bao nhiêu khách hàng mà công ty đầu tư nhưng không tạo ra doanh thu trong năm?”
+SELECT dt.customer2, d.investment, dt.revenue
+FROM Dau_tu d
+JOIN Doanh_thu dt ON d.customer2 = dt.customer2
+WHERE dt.revenue = 0;
+
+
+
+
+
