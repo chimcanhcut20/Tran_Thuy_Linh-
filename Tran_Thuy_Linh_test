@@ -7,7 +7,7 @@ CREATE DATABASE company_data;
 # Tạo bảng Dau_tu:
 CREATE TABLE company_data.Dau_tu (
     No INT,
-    month INT,
+    month VARCHAR(50),
     year INT,
     customer2 VARCHAR(50),
     customer1 VARCHAR(50),
@@ -26,7 +26,7 @@ CREATE TABLE company_data.Dau_tu (
 CREATE TABLE company_data.Doanh_thu (
     No INT,
     year INT,
-    month INT,
+    month VARCHAR(50),
     customer2 VARCHAR(50),
     customer1 VARCHAR(50),
     province VARCHAR(50),
